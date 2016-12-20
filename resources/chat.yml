@@ -1,0 +1,39 @@
+#  _____           _        _   _____
+# |  __ \         | |      | | |  __ \
+# | |__) |__   ___| | _____| |_| |__) |__ _ __ _ __ ___  ___
+# |  ___/ _ \ / __| |/ / _ \ __|  ___/ _ \ '__| '_ ` _ \/ __|
+# | |  | (_) | (__|   <  __/ |_| |  |  __/ |  | | | | | \__ \
+# |_|   \___/ \___|_|\_\___|\__|_|   \___|_|  |_| |_| |_|___/
+#
+#
+# Made by PocketEssential Copyright 2016 ©
+#
+# This is a public software, you cannot redistribute it a and/or modify any way
+# unless otherwise given permission to do so.
+#
+# Author: The PocketEssential Team
+# Link: https://github.com/PocketEssential
+#
+#|------------------------------------------------ PocketPerms ------------------------------------------------|
+#| - If you made a mistake in the config, either edit it, or delete the config file, then restart your server!  |
+#| - If the issue persists, report it at https://github.com/PocketEssential/PocketPerms/issues                 |
+#|--------------------------------------------------------------------------------------------------------------|
+
+#
+# Varibles
+#
+# {player_name} {player_nametag} {chat_message}
+#  Wanting support for another plugin? Let us know via our issue tracker!
+
+
+Member:
+  Chat: "[Member] {player_name} > {chat_message}"
+  Nametag: "[Member] {player_name}"
+
+Owner:
+  Chat: "[Owner] {player_name} > {chat_message}"
+  Nametag: "[Owner] {player_name}"
+
+Admin:
+  Chat: "[Admin] {player_name} > [chat_message]"
+  Nametag: "[Admin] {player_name}"
