@@ -35,5 +35,5 @@ Owner:
   Nametag: "[Owner] {player_name}"
 
 Admin:
-  Chat: "[Admin] {player_name} > [message]"
+  Chat: "[Admin] {player_name} > {message}"
   Nametag: "[Admin] {player_name}"
