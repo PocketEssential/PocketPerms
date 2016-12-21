@@ -26,6 +26,7 @@ use pocketmine\event\Listener;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerChatEvent;
 
 class Events implements Listener
 {
@@ -52,6 +53,11 @@ class Events implements Listener
             $group = $this->plugin->getGroup($player);
             $this->setGroup($player, $group);
         }
+    }
+   public function onChat(PlayerChatEvent $event){
+
+      $format = $this->plugin->getChatFormat($event->getPlayer(), $event->getMessage());
+        $event->setFormat($format);
     }
 }
 
