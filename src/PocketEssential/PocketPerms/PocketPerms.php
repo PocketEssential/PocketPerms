@@ -24,8 +24,6 @@ namespace PocketEssential\PocketPerms;
 
 
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
@@ -37,7 +35,7 @@ class PocketPerms extends PluginBase implements Listener
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents(new Events\Events($this), $this);
-        $this->getServer()->getPluginManager()->registerEvents($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
         @mkdir($this->getDataFolder());
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         $this->chatFormat = new Config($this->getDataFolder() . "chat.yml", Config::YAML);
