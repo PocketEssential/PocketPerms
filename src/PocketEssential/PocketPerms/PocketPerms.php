@@ -51,17 +51,21 @@ class PocketPerms extends PluginBase implements Listener
      */
 
     public function getGroup($player){
-
-      if($this->players->get(strtolower($name)) == null){
-
+      if($this->getPlayerConfig($player)->get(strtolower($name)) == null){
             return false;
         } else {
-           return $this->players->get(strtolower($player->getName()));
+           return $this->getPlayerConfig($player)->get(strtolower($player->getName()));
       }
+    }
+    
+    public function getPlayerConfig(Player $player){
+        $cfg = new Config($this->getDataFolder() . "players/" . strtolower($player->getName()) . ".yml"), Config::YAML);
+        return $cfg;
     }
     
     public function registerFirstJoin(Player $player){
         $cfg = new Config($this->getDataFolder() . "players/" . strtolower($player->getName()) . ".yml"));
+        $cfg->set("rank", "Guest");
     	$cfg->save();
     }
     
@@ -70,7 +74,7 @@ class PocketPerms extends PluginBase implements Listener
     }
 
     public function setGroup($player, $group){
-        $this->players->set(strtolower($player->getName()), $group);
+        $this->getPlayerConfig($player)->set(strtolower($player->getName()), $group);
     }
 
     public function getChatFormat($player, $message){
