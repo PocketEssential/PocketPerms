@@ -47,6 +47,10 @@ class Events implements Listener
         $player = $event->getPlayer();
         $default = $this->plugin->config->get("default-group");
 
+        if($this->plugin->isFirstJoin($player) == false){
+            $this->plugin->registerFirstJoin($player);
+        }
+        
         if ($this->plugin->getGroup($player) == false) {
             $this->plugin->setGroup($player, $default);
         } else {
