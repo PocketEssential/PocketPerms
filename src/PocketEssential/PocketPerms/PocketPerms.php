@@ -59,6 +59,15 @@ class PocketPerms extends PluginBase implements Listener
            return $this->players->get(strtolower($player->getName()));
       }
     }
+    
+    public function registerFirstJoin(Player $player){
+        $cfg = new Config($this->getDataFolder() . "players/" . strtolower($player->getName()) . ".yml"));
+    	$cfg->save();
+    }
+    
+    public function isFirstJoin(Player $player){
+        return file_exists($this->getDataFolder() . "players/" . strtolower($player->getName()). ".yml");
+    }
 
     public function setGroup($player, $group){
         $this->players->set(strtolower($player->getName()), $group);
