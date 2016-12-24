@@ -49,7 +49,7 @@ class PocketPerms extends PluginBase implements Listener
      */
 
     public function getGroup($player){
-      if($this->getPlayerConfig($player)->get(strtolower($name)) == null){
+      if($this->getPlayerConfig($player)->get("group") === ""){
             return false;
         } else {
            return $this->getPlayerConfig($player)->get("group");
