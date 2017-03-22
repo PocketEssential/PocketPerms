@@ -23,6 +23,7 @@
 namespace PocketEssential\PocketPerms;
 
 
+use PocketEssential\PocketPerms\Commands\PP;
 use pocketmine\event\Listener;
 use pocketmine\Server;
 use pocketmine\utils\Config;
@@ -32,61 +33,137 @@ use pocketmine\Player;
 class PocketPerms extends PluginBase implements Listener
 {
 
+    public $groups;
+    public $chatFormat;
+    public $data;
+    public $main;
+    const PERMISSION = ".";
+    const RUN_FROM_CONSOLE = "Please run this command from console";
+
     public function onEnable()
     {
-        $this->getServer()->getPluginManager()->registerEvents(new Events\Events($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new PPListener\ChatListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         @mkdir($this->getDataFolder());
-        $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        $this->main = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         $this->chatFormat = new Config($this->getDataFolder() . "chat.yml", Config::YAML);
-        $this->groups = new Config($this->getDataFolder() . "groups.yml", Config.YAML);
+        $this->groups = new Config($this->getDataFolder() . "groups.yml", Config::YAML);
+        $this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
+        $this->getServer()->getCommandMap()->registerAll('NetworkSystem', [
+            new PP($this)
+        ]);
 
-       // $this->getLogger()->info($this->PocketPerms());
     }
 
-    /*
-     * API
-     */
+    public function onDisable()
+    {
+        $this->main->save();
+        $this->chatFormat->save();
+        $this->groups->save();
+        $this->data->save();
+    }
 
-    public function getGroup($player){
-      if($this->getPlayerConfig($player)->get("group") === ""){
-            return false;
+
+    public function getPlayerGroup($player)
+    {
+
+        if ($this->data instanceof Config && $player instanceof Player) {
+            $group = $this->data->get($player->getName());
+
+            if ($group == null) {
+                return null;
+            } else {
+                return $group;
+            }
+        }
+    }
+
+    public function setGroup($player, $group)
+    {
+
+        if ($this->data instanceof Config && $player instanceof Player) {
+            $this->data->set($player->getName(), $group);
+            $this->data->save();
         } else {
-           return $this->getPlayerConfig($player)->get("group");
-      }
-    }
-    
-    public function getPlayerConfig(Player $player){
-        $cfg = new Config($this->getDataFolder() . "players/" . strtolower($player->getName()) . ".yml"), Config::YAML);
-        return $cfg;
-    }
-    
-    public function registerFirstJoin(Player $player){
-        $cfg = new Config($this->getDataFolder() . "players/" . strtolower($player->getName()) . ".yml"));
-        $cfg->set("group", $this->groups->get("default-group"));
-    	$cfg->save();
-    }
-    
-    public function isFirstJoin(Player $player){
-        return file_exists($this->getDataFolder() . "players/" . strtolower($player->getName()). ".yml");
+            return false;
+        }
     }
 
-    public function setGroup($player, $group){
-        $this->getPlayerConfig($player)->set("group", $group);
+    public function getChatFormat($player, $message)
+    {
+
+        if ($this->chatFormat instanceof Config && $player instanceof Player) {
+
+            $group = $this->getPlayerGroup($player);
+            $format = $this->chatFormat->get($group);
+            $format = $format['Chat'];
+            $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
+            $format = str_replace("{player_name}", $player->getName(), $format);
+            $format = str_replace("{message}", $message, $format);
+            $format = str_replace("{color}", "§", $format);
+            return $format;
+        } else {
+            return false;
+        }
     }
 
-    public function getChatFormat($player, $message){
+    public function getNameTagFormat($player)
+    {
 
-         $chats = $this->chatFormat;
-         $group = $this->getGroup($player);
-         $format = $group->getNested("$group"."Chat");
+        if ($this->chatFormat instanceof Config) {
+            if ($player instanceof Player) {
+                $group = $this->getPlayerGroup($player);
+                $format = $this->chatFormat->get($group);
+                $format = $format['Nametag'];
+                $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
+                $format = str_replace("{player_name}", $player->getName(), $format);
+                $format = str_replace("{color}", "§", $format);
+                return $format;
 
-        $chatFormat = str_replace("{player_name}",$player->getName(),$format);
-        $tw = str_replace("{message}",$message,$chatFormat);
-        $tw3 = str_replace("{player_nametag}",$player->getNameTag(),$tw);
-        $final = str_replace("{color}",'%',$tw3);
+            } else {
 
-         return $final;
+                return false;
+            }
+        }
+    }
 
+    public function getGroup($group)
+    {
+
+        $g = $this->groups->get("Groups");
+
+        if ($g[$group] != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addPermission($player, $pp, $permissions = null)
+    {
+
+        if ($player instanceof Player) {
+            $player->addAttachment($this, $pp, true);
+        } else {
+            return false;
+        }
+    }
+
+    public function addGroupPermission($group, $pp)
+    {
+
+        if ($this->groups instanceof Config) {
+            $permission = $this->groups->get("Groups");
+            $permissions = $permission[$group]['Permissions'];
+            $updated = $permissions;
+            $updated[] = "$pp";
+            $da = $this->groups->get("Groups");
+            $da = $da[$group];
+
+            $v = $this->groups->get("Groups");
+
+        } else {
+            return false;
+        }
     }
 }

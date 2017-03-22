@@ -22,7 +22,7 @@
 # Set the date provider that  you'd like PocketPerms to use:
 # Options: Yaml, MySQL, SQLite
 
-data-provider: Yaml
+data-provider: "Yaml"
 
 
 MySQL:

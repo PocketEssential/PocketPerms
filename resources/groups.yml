@@ -20,23 +20,24 @@
 #|--------------------------------------------------------------------------------------------------------------|
 
 
-default-group: Member
+default-group: "Member"
 
 #
 #  You can add more groups, Just follow the format.
 #
 
 Groups:
-   Member:
+ Member:
+     Permission:
+      - "pocketmine.command.me"
+      - "pocketmine.command.list"
+ Owner:
      Permissions:
-     - pocketmine.command.me
-     - pocketmine.command.list
-   Owner:
-      Permissions:
-     - *
-   Admin:
+      - "pocketmine.command.me"
+      - "add.more.here.etc"
+ Admin:
      Permissions:
-     - pocketmine.command.me
-     - pocketmine.command.list
-     - pocketmine.command.ban
-     - pocketmine.command.kick
+      - "pocketmine.command.me"
+      - "pocketmine.command.list"
+      - "pocketmine.command.ban"
+      - "pocketmine.command.kick"
