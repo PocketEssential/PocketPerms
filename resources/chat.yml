@@ -23,7 +23,13 @@
 # Varibles
 #
 # {player_name} {player_nametag} {message} {color}d,c etc
-# {Factions_Pro} - For FactionsPro Plugin
+# {Factions_Pro} - For FactionsPro Plugin (Must be installed)
+# {EconomyAPI_Money} - Displays EconomyAPI money (Must be installed)
+# {EconomyPlus_Money} - Displays EconomyPlus money (Must be installed)
+# {Online} - Displays a number of amount of players in server
+# {Max} - Displays server max player amount
+# {Level} - Displays player level name
+# {Health} - Displays player health
 #  Wanting support for another plugin? Let us know via our issue tracker!
 
 

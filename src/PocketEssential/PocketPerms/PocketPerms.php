@@ -23,6 +23,9 @@
 namespace PocketEssential\PocketPerms;
 
 
+
+use onebone\economyapi\EconomyAPI;
+use EconomyPlus\EconomyPlus;
 use PocketEssential\PocketPerms\Commands\PP;
 use pocketmine\event\Listener;
 use pocketmine\Server;
@@ -99,8 +102,14 @@ class PocketPerms extends PluginBase implements Listener
             $format = $format['Chat'];
             $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
             $format = str_replace("{player_name}", $player->getName(), $format);
-            $format = str_replace("{message}", $message, $format);
             $format = str_replace("{color}", "§", $format);
+            $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
+            $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+            $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+            $format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
+            $format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
+            $format = str_replace("{Level}", $player->getLevel()->getName(), $format);
+            $format = str_replace("{Health}", $player->getHealth(), $format);
             return $format;
         } else {
             return false;
@@ -118,14 +127,21 @@ class PocketPerms extends PluginBase implements Listener
                 $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
                 $format = str_replace("{player_name}", $player->getName(), $format);
                 $format = str_replace("{color}", "§", $format);
+                $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
+                $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+                $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+                $format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
+                $format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
+                $format = str_replace("{Level}", $player->getLevel()->getName(), $format);
+                $format = str_replace("{Health}", $player->getHealth(), $format);
                 return $format;
 
-            } else {
+                } else {
 
-                return false;
+                    return false;
+                }
             }
         }
-    }
 
     public function getGroup($group)
     {
