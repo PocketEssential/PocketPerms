@@ -67,6 +67,9 @@ class PocketPerms extends PluginBase implements Listener
     }
 
 
+    /*
+     *  Gets a player group
+     */
     public function getPlayerGroup($player)
     {
 
@@ -81,6 +84,9 @@ class PocketPerms extends PluginBase implements Listener
         }
     }
 
+    /*
+     * Sets a player group
+     */
     public function setGroup($player, $group)
     {
 
@@ -92,6 +98,9 @@ class PocketPerms extends PluginBase implements Listener
         }
     }
 
+    /*
+     * Get a group chat format
+     */
     public function getChatFormat($player, $message)
     {
 
@@ -116,6 +125,9 @@ class PocketPerms extends PluginBase implements Listener
         }
     }
 
+    /*
+     * Get a group name tag format
+     */
     public function getNameTagFormat($player)
     {
 
@@ -143,6 +155,9 @@ class PocketPerms extends PluginBase implements Listener
             }
         }
 
+        /*
+         * Checks if a group  exist
+         */
     public function getGroup($group)
     {
 
@@ -155,6 +170,10 @@ class PocketPerms extends PluginBase implements Listener
         }
     }
 
+    /*
+     *  Register permission to player ($permissions must
+     *  be instance of a list of permissions to add)
+     */
     public function addPermission($player, $pp, $permissions = null)
     {
 
@@ -165,6 +184,9 @@ class PocketPerms extends PluginBase implements Listener
         }
     }
 
+    /*
+     * Add a permission to a group
+     */
     public function addGroupPermission($group, $pp)
     {
 
@@ -179,6 +201,25 @@ class PocketPerms extends PluginBase implements Listener
             $v = $this->groups->get("Groups");
 
         } else {
+            return false;
+        }
+    }
+
+    /*
+     * Delete a group from the list of groups
+     */
+    public function deleteGroup($group)
+    {
+
+        if ($this->groups instanceof Config) {
+            $group = $this->groups->get("Groups");
+
+            $remove = array($group);
+            $result = array_diff($group, $remove);
+            $this->groups->set("Groups", $result);
+
+        } else {
+
             return false;
         }
     }
