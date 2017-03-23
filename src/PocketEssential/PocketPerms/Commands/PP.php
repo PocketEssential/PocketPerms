@@ -47,10 +47,10 @@ class PP extends Base
                             $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Player name> <Group name>");
                         } else {
                             if ($this->getPlugin()->getServer()->getPlayer($args[1]) == null) {
-                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . "Error while trying to set " . $args[1] . " group, is the player online?");
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " Error while trying to set " . $args[1] . " group, is the player online?");
                             } else {
                                 if ($this->getPlugin()->getGroup($as->getrgs[2]) == false) {
-                                    $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . "That group doesn't exist!");
+                                    $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
                                 } else {
                                     $this->getPlugin()->setGroup($this->Plugin()->getServer()->getPlayer($args[1]), $args[2]);
                                     $sender->sendMessage(TextFormat::BLUE . "[PP] " . $args[1] . " group has successfully been set to " . $args[2]);
@@ -76,7 +76,7 @@ class PP extends Base
                                 $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
                             } else {
                                 $this->getPlugin()->addGroupPermission($args[1], $args[2]);
-                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . "Added permission: ".$args[2]." to group " . $args[1]." successfully!");
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " Added permission: ".$args[2]." to group " . $args[1]." successfully!");
                             }
                         }
                     }
