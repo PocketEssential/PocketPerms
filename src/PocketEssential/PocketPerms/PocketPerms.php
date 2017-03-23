@@ -226,6 +226,26 @@ class PocketPerms extends PluginBase implements Listener
     }
 
     /*
+   * Remove a permission from a group
+   */
+    public function deleteGroupPermission($group, $pp)
+    {
+
+        if ($this->groups instanceof Config) {
+            $permission = $this->groups->get("Groups");
+            $permissions = $permission[$group]['Permissions'];
+
+            $result = array_diff($permission, $pp);
+            $pp = $this->groups->get("Groups");
+            $ppp = $pp[$group]['Permissions'];
+            $this->groups->set($ppp ,$result);
+
+        } else {
+            return false;
+        }
+    }
+
+    /*
      * Delete a group from the list of groups
      */
     public function deleteGroup($group)
@@ -239,11 +259,13 @@ class PocketPerms extends PluginBase implements Listener
             $this->groups->set("Groups", $result);
 
         } else {
-
             return false;
         }
     }
 
+    /*
+     *  Returns the list of groups in array
+     */
     public function getGroups()
     {
         $pie = $this->groups->getAll();
@@ -251,4 +273,17 @@ class PocketPerms extends PluginBase implements Listener
 
         var_dump($cupcake);
     }
+
+    /*
+     *  Sets a group chat format
+     */
+    public function setGroupFormat($group, $format){
+
+        if($this->chatFormat instanceof Config){
+            $this->chatFormat->set($group, $format);
+        } else {
+            return false;
+        }
+    }
 }
+

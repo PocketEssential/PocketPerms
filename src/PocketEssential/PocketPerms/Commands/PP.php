@@ -70,7 +70,7 @@ class PP extends Base
                         $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp addperm <Group name> <Permission>");
                     } else {
                         if ($args[2] == null) {
-                            $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Group name> <Permission>");
+                            $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp addperm <Group name> <Permission>");
                         } else {
                             if ($this->getPlugin()->getGroup($args[1]) == false) {
                                 $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
@@ -116,6 +116,48 @@ class PP extends Base
                  }
                     break;
 
+                /*
+                 *  Set format
+                 */
+                 case "setformat":
+                 case "setfmt":
+                if($args[1] == null){
+                    $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setformat <Group name> <Format>");
+                } else {
+                    if ($args[2] == null) {
+                        $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setformat <Group name> <Format>");
+                    } else {
+                        if ($this->getPlugin()->getGroup($args[1]) == false) {
+                            $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
+                        } else {
+                            $this->plugin->setGroupFormat($args[1], implode(" ", $args));
+                            $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " Successfully set group" . $args[1] . " format to ". $args[2]);
+                        }
+                    }
+                }
+                break;
+
+                /*
+                 *  Add a permission to a group
+                 */
+                case "delperm":
+                case "delp":
+                case "delpermission":
+                    if($args[1] == null){
+                        $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delperm <Group name> <Permission>");
+                    } else {
+                        if ($args[2] == null) {
+                            $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delperm <Group name> <Permission>");
+                        } else {
+                            if ($this->getPlugin()->getGroup($args[1]) == false) {
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
+                            } else {
+                                $this->getPlugin()->deleteGroupPermission($args[1], $args[2]);
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " deleted permission: ".$args[2]." from group " . $args[1]." successfully!");
+                            }
+                        }
+                    }
+                    break;
             }
         } else {
             $sender->sendMessage(PocketPerms::RUN_FROM_CONSOLE);
