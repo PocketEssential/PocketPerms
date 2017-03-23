@@ -11,6 +11,7 @@ namespace PocketEssential\PocketPerms\Commands;
 use PocketEssential\PocketPerms\PocketPerms;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 
 class PP extends Base
@@ -40,19 +41,19 @@ class PP extends Base
                 case "setgroup":
                 case "setgrp":
                     if($args[1] == null){
-                        $sender->sendMessage("/pp setgroup [player name] [group name]");
+                        $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Player name> <Group name>");
                     } else {
                         if ($args[2] == null) {
-                            $sender->sendMessage("/pp setgroup [player name] [group name]");
+                            $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Player name> <Group name>");
                         } else {
                             if ($this->getPlugin()->getServer()->getPlayer($args[1]) == null) {
-                                $sender->sendMessage("[PP] Error while trying to set " . $args[1] . " group. Is he/she online?");
+                                $sender->sendMessage(TexFormat::RED . "[PP] Error while trying to set " . $args[1] . " group, is the player online?");
                             } else {
-                                if ($this->getPlugin()->getGroup($args[2]) == false) {
-                                    $sender->sendMessage("[PP] That group does not exist");
+                                if ($this->getPlugin()->getGroup($as->getrgs[2]) == false) {
+                                    $sender->sendMessage(TexFormat::RED . "[PP] That group doesn't exist!");
                                 } else {
-                                    $this->getPlugin()->setGroup($this->getPlugin()->getServer()->getPlayer($args[1]), $args[2]);
-                                    $sender->sendMessage("[PP] " . $args[1] . " group has successfully been set to " . $args[2]);
+                                    $this->getPlugin()->setGroup($this->Plugin()->getServer()->getPlayer($args[1]), $args[2]);
+                                    $sender->sendMessage(TexFormat::GREEN . "[PP] " . $args[1] . " group has successfully been set to " . $args[2]);
                                 }
                             }
                         }
@@ -66,16 +67,16 @@ class PP extends Base
                 case "addp":
                 case "addpermission":
                     if($args[1] == null){
-                        $sender->sendMessage("/pp addperm [group name] [permission]");
+                        $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp addperm <Group name> <Permission>");
                     } else {
                         if ($args[2] == null) {
-                            $sender->sendMessage("/pp setgroup [group name] [permission]");
+                            $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Group name> <Permission>");
                         } else {
                             if ($this->getPlugin()->getGroup($args[1]) == false) {
-                                $sender->sendMessage("[PP] That group does not exist");
+                                $sender->sendMessage(TextFormat::RED . "[PP] That group doesn't exist!");
                             } else {
                                 $this->getPlugin()->addGroupPermission($args[1], $args[2]);
-                                $sender->sendMessage("[PP] Added permission: ".$args[2]." to group " . $args[1]." successfully");
+                                $sender->sendMessage(TexFormat::GREEN . "[PP] Added permission: ".$args[2]." to group " . $args[1]." successfully!");
                             }
                         }
                     }
@@ -89,13 +90,13 @@ class PP extends Base
                 case "delgroup":
                 case "delgrp":
                 if($args[1] == null){
-                    $sender->sendMessage("/pp delgroup [group name]");
+                    $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delgroup <Group name>");
                 } else {
                         if ($this->getPlugin()->getGroup($args[1]) == false) {
-                            $sender->sendMessage("[PP] That group does not exist");
+                            $sender->sendMessage(TextFormat::RED . "[PP] That group doesn't exist!");
                         } else {
                             $this->getPlugin()->deleteGroup($args[1]);
-                            $sender->sendMessage("[PP] Group ". $args[1] . " has successfully been removed");
+                            $sender->sendMessage(TexFormat::GREEN . "[PP] Group ". $args[1] . " has successfully been removed");
                         }
                     }
                 break;
