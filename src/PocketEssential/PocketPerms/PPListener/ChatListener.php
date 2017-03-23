@@ -20,6 +20,7 @@ class ChatListener implements Listener
 {
 
     public $plugin;
+    public $cache;
 
     public function __construct(PocketPerms $plugin)
     {
@@ -41,6 +42,12 @@ class ChatListener implements Listener
             $this->plugin->setGroup($player, $this->plugin->groups->get("default-group"));
         } else {
             $player->setNameTag($this->plugin->getNameTagFormat($player));
+        }
+
+        if($this->plugin->main->get("cache") == "true"){
+            $this->cache[$player->getName()] = array(
+                "Group" => $this->plugin->getPlayerGroup($player),
+            );
         }
 
         if ($this->plugin->getPlayerGroup($player) != null) {

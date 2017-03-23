@@ -36,3 +36,7 @@ MySQL:
 # This option will disable /op
 
 disable-op-command: false
+
+# Enable cache system? Caches a player group. (You'd have to restart server if you change a user group to see changes!)
+
+cache: false

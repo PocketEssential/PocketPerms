@@ -56,6 +56,8 @@ class PocketPerms extends PluginBase implements Listener
             new PP($this)
         ]);
 
+
+
     }
 
     public function onDisable()
