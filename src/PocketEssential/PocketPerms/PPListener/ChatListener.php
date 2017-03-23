@@ -8,7 +8,6 @@
 
 namespace PocketEssential\PocketPerms\PPListener;
 
-use PocketEssential\PocketPerms\Permission\Permission;
 use PocketEssential\PocketPerms\PocketPerms;
 use pocketmine\event\Listener;
 use pocketmine\Player;

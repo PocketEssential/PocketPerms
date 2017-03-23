@@ -48,10 +48,34 @@ class PocketPerms extends PluginBase implements Listener
         $this->getServer()->getPluginManager()->registerEvents(new PPListener\ChatListener($this), $this);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         @mkdir($this->getDataFolder());
+        $this->saveDefaultConfig();
+
+        if(!file_exists($this->getDataFolder()."groups.yml")){
+            file_put_contents($this->getDataFolder() . "groups.yml", $this->getResource("groups.yml"));
+        }
+
+        if(!file_exists($this->getDataFolder()."config.yml")){
+            file_put_contents($this->getDataFolder() . "config.yml", $this->getResource("config.yml"));
+        }
+
+        if(!file_exists($this->getDataFolder()."chat.yml")){
+            file_put_contents($this->getDataFolder() . "chat.yml", $this->getResource("chat.yml"));
+        }
+
+        if(!file_exists($this->getDataFolder()."data.yml")){
+            file_put_contents($this->getDataFolder() . "data.yml", $this->getResource("data.yml"));
+        }
+
         $this->main = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         $this->chatFormat = new Config($this->getDataFolder() . "chat.yml", Config::YAML);
-        $this->groups = new Config($this->getDataFolder() . "groups.yml", Config::YAML);
         $this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
+        $this->groups = new Config($this->getDataFolder() . "groups.yml", Config::YAML);
+
+        $this->main->save();
+        $this->groups->save();
+        $this->chatFormat->save();
+        $this->data->save();
+
         $this->getServer()->getCommandMap()->registerAll('NetworkSystem', [
             new PP($this)
         ]);

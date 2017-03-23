@@ -131,7 +131,7 @@ class PP extends Base
                             $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
                         } else {
                             $this->plugin->setGroupFormat($args[1], implode(" ", $args));
-                            $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " Successfully set group" . $args[1] . " format to ". $args[2]);
+                            $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " Successfully set group " . $args[1] . " format to ". $args[2]);
                         }
                     }
                 }
