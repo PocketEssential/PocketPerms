@@ -149,7 +149,6 @@ class PocketPerms extends PluginBase implements Listener
                 $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
                 $format = str_replace("{player_name}", $player->getName(), $format);
                 $format = str_replace("{color}", "§", $format);
-                $format = str_replace("{message}", $message, $format);
 
                 if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
                     $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
