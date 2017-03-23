@@ -56,7 +56,9 @@ class PocketPerms extends PluginBase implements Listener
             new PP($this)
         ]);
 
-
+        $this->getLogger()->notice("---------- PocketPerm ---------");
+        $this->getLogger()->notice("    Loaded, & ready to use     ");
+        $this->getLogger()->notice("-------------------------------");
 
     }
 
@@ -116,13 +118,13 @@ class PocketPerms extends PluginBase implements Listener
             $format = str_replace("{color}", "§", $format);
             $format = str_replace("{message}", $message, $format);
 
-            if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+            if ($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null) {
                 $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
             }
-            if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+            if ($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null) {
                 $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
             }
-            if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+            if ($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null) {
                 $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
             }
 
@@ -150,13 +152,13 @@ class PocketPerms extends PluginBase implements Listener
                 $format = str_replace("{player_name}", $player->getName(), $format);
                 $format = str_replace("{color}", "§", $format);
 
-                if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+                if ($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null) {
                     $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
                 }
-                if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+                if ($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null) {
                     $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
                 }
-                if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+                if ($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null) {
                     $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
                 }
 
@@ -166,16 +168,16 @@ class PocketPerms extends PluginBase implements Listener
                 $format = str_replace("{Health}", $player->getHealth(), $format);
                 return $format;
 
-                } else {
+            } else {
 
-                    return false;
-                }
+                return false;
             }
         }
+    }
 
-        /*
-         * Checks if a group  exist
-         */
+    /*
+     * Checks if a group  exist
+     */
     public function getGroup($group)
     {
 
@@ -240,5 +242,13 @@ class PocketPerms extends PluginBase implements Listener
 
             return false;
         }
+    }
+
+    public function getGroups()
+    {
+        $pie = $this->groups->getAll();
+        $cupcake = $pie['Groups'];
+
+        var_dump($cupcake);
     }
 }

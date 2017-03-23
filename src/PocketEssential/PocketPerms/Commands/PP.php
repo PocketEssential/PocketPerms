@@ -47,13 +47,13 @@ class PP extends Base
                             $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Player name> <Group name>");
                         } else {
                             if ($this->getPlugin()->getServer()->getPlayer($args[1]) == null) {
-                                $sender->sendMessage(TexFormat::RED . "[PP] Error while trying to set " . $args[1] . " group, is the player online?");
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " Error while trying to set " . $args[1] . " group, is the player online?");
                             } else {
-                                if ($this->getPlugin()->getGroup($as->getrgs[2]) == false) {
-                                    $sender->sendMessage(TexFormat::RED . "[PP] That group doesn't exist!");
+                                if ($this->getPlugin()->getGroup($args[2]) == false) {
+                                    $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
                                 } else {
-                                    $this->getPlugin()->setGroup($this->Plugin()->getServer()->getPlayer($args[1]), $args[2]);
-                                    $sender->sendMessage(TexFormat::GREEN . "[PP] " . $args[1] . " group has successfully been set to " . $args[2]);
+                                    $this->getPlugin()->setGroup($this->getPlugin()->getServer()->getPlayer($args[1]), $args[2]);
+                                    $sender->sendMessage(TextFormat::BLUE . "[PP] " . $args[1] . " group has successfully been set to " . $args[2]);
                                 }
                             }
                         }
@@ -73,10 +73,10 @@ class PP extends Base
                             $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Group name> <Permission>");
                         } else {
                             if ($this->getPlugin()->getGroup($args[1]) == false) {
-                                $sender->sendMessage(TextFormat::RED . "[PP] That group doesn't exist!");
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
                             } else {
                                 $this->getPlugin()->addGroupPermission($args[1], $args[2]);
-                                $sender->sendMessage(TexFormat::GREEN . "[PP] Added permission: ".$args[2]." to group " . $args[1]." successfully!");
+                                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " Added permission: ".$args[2]." to group " . $args[1]." successfully!");
                             }
                         }
                     }
@@ -89,17 +89,32 @@ class PP extends Base
                 case "rmgroup":
                 case "delgroup":
                 case "delgrp":
-                if($args[1] == null){
-                    $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delgroup <Group name>");
-                } else {
+                    if($args[1] == null){
+                        $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delgroup <Group name>");
+                    } else {
                         if ($this->getPlugin()->getGroup($args[1]) == false) {
-                            $sender->sendMessage(TextFormat::RED . "[PP] That group doesn't exist!");
+                            $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::RED . " That group doesn't exist!");
                         } else {
                             $this->getPlugin()->deleteGroup($args[1]);
-                            $sender->sendMessage(TexFormat::GREEN . "[PP] Group ". $args[1] . " has successfully been removed");
+                            $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . " Group ". $args[1] . " has successfully been removed");
                         }
                     }
-                break;
+                    break;
+
+                /*
+                 * List groups
+                 */
+
+                case "listgroup":
+                case "listgroups":
+                case "listgrp":
+                $sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . "List of groups:");
+
+                $groups = $this->getPlugin()->groups->get("Groups");
+                 foreach ($groups as $g){
+                     $sender->sendMessage("- ".$g);
+                 }
+                    break;
 
             }
         } else {
