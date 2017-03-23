@@ -114,9 +114,18 @@ class PocketPerms extends PluginBase implements Listener
             $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
             $format = str_replace("{player_name}", $player->getName(), $format);
             $format = str_replace("{color}", "§", $format);
-            $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
-            $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
-            $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+            $format = str_replace("{message}", $message, $format);
+
+            if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+                $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
+            }
+            if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+                $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+            }
+            if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+                $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+            }
+
             $format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
             $format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
             $format = str_replace("{Level}", $player->getLevel()->getName(), $format);
@@ -137,13 +146,21 @@ class PocketPerms extends PluginBase implements Listener
             if ($player instanceof Player) {
                 $group = $this->getPlayerGroup($player);
                 $format = $this->chatFormat->get($group);
-                $format = $format['Nametag'];
                 $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
                 $format = str_replace("{player_name}", $player->getName(), $format);
                 $format = str_replace("{color}", "§", $format);
-                $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
-                $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
-                $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+                $format = str_replace("{message}", $message, $format);
+
+                if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+                    $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
+                }
+                if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+                    $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+                }
+                if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+                    $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+                }
+
                 $format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
                 $format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
                 $format = str_replace("{Level}", $player->getLevel()->getName(), $format);
