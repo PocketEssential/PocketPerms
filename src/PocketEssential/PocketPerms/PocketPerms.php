@@ -80,7 +80,7 @@ class PocketPerms extends PluginBase implements Listener
             new PP($this)
         ]);
 
-        $this->getLogger()->notice("---------- PocketPerm ---------");
+        $this->getLogger()->notice("---------- PocketPerms ---------");
         $this->getLogger()->notice("    Loaded, & ready to use     ");
         $this->getLogger()->notice("-------------------------------");
 
