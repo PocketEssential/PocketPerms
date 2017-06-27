@@ -1,5 +1,5 @@
 name: PocketPerms
 main: PocketEssential\PocketPerms\PocketPerms
-api: [2.0.0, 2.1.0, 3.0.0]
+api: [2.0.0, 2.1.0, 3.0.0, 3.0.0-ALPHA5, 3.0.0-ALPHA6]
 version: 1.0.0
 author: PocketEssential

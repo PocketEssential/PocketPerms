@@ -26,18 +26,17 @@ default-group: "Member"
 #  You can add more groups, Just follow the format.
 #
 
-Groups:
- Member:
-     Permission:
-      - "pocketmine.command.me"
-      - "pocketmine.command.list"
- Owner:
-     Permissions:
-      - "pocketmine.command.me"
-      - "add.more.here.etc"
- Admin:
-     Permissions:
-      - "pocketmine.command.me"
-      - "pocketmine.command.list"
-      - "pocketmine.command.ban"
-      - "pocketmine.command.kick"
+Member:
+   Permissions:
+    - "pocketmine.command.me"
+    - "pocketmine.command.list"
+Owner:
+   Permissions:
+    - "pocketmine.command.me"
+    - "add.more.here.etc"
+Admin:
+   Permissions:
+    - "pocketmine.command.me"
+    - "pocketmine.command.list"
+    - "pocketmine.command.ban"
+    - "pocketmine.command.kick"

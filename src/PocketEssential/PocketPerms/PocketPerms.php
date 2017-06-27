@@ -23,7 +23,6 @@
 namespace PocketEssential\PocketPerms;
 
 
-
 use onebone\economyapi\EconomyAPI;
 use EconomyPlus\EconomyPlus;
 use PocketEssential\PocketPerms\Commands\PP;
@@ -33,281 +32,244 @@ use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
 
-class PocketPerms extends PluginBase implements Listener
-{
+class PocketPerms extends PluginBase implements Listener {
 
-    public $groups;
-    public $chatFormat;
-    public $data;
-    public $main;
-    const PERMISSION = ".";
-    const RUN_FROM_CONSOLE = "Please run this command from console";
+	public $group;
+	public $conf;
+	public $chat;
+	public $data;
+	const PERMISSION = ".";
+	const RUN_FROM_CONSOLE = "Please run this command from console";
 
-    public function onEnable()
-    {
-        $this->getServer()->getPluginManager()->registerEvents(new PPListener\ChatListener($this), $this);
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        @mkdir($this->getDataFolder());
-        $this->saveDefaultConfig();
+	public function onEnable(){
+		$this->getServer()->getPluginManager()->registerEvents(new PPListener\ChatListener($this), $this);
+		$this->getServer()->getPluginManager()->registerEvents(new PPListener\JoinListener($this), $this);
+		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->getReady();
 
-        if(!file_exists($this->getDataFolder()."groups.yml")){
-            file_put_contents($this->getDataFolder() . "groups.yml", $this->getResource("groups.yml"));
-        }
+		$this->getServer()->getCommandMap()->registerAll('NetworkSystem', [
+			new PP($this)
+		]);
 
-        if(!file_exists($this->getDataFolder()."config.yml")){
-            file_put_contents($this->getDataFolder() . "config.yml", $this->getResource("config.yml"));
-        }
+		$this->getLogger()->notice("---------- PocketPerms ---------");
+		$this->getLogger()->notice("    Loaded, & ready to use     ");
+		$this->getLogger()->notice("-------------------------------");
 
-        if(!file_exists($this->getDataFolder()."chat.yml")){
-            file_put_contents($this->getDataFolder() . "chat.yml", $this->getResource("chat.yml"));
-        }
+	}
 
-        if(!file_exists($this->getDataFolder()."data.yml")){
-            file_put_contents($this->getDataFolder() . "data.yml", $this->getResource("data.yml"));
-        }
+	public function onDisable(){
+		$this->group->save();
+		$this->conf->save();
+		$this->chat->save();
+		$this->data->save();
+	}
 
-        $this->main = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-        $this->chatFormat = new Config($this->getDataFolder() . "chat.yml", Config::YAML);
-        $this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
-        $this->groups = new Config($this->getDataFolder() . "groups.yml", Config::YAML);
+	public function getReady(){
 
-        $this->main->save();
-        $this->groups->save();
-        $this->chatFormat->save();
-        $this->data->save();
+		if(!is_dir($this->getDataFolder())){
+			@mkdir($this->getDataFolder());
+		}
 
-        $this->getServer()->getCommandMap()->registerAll('NetworkSystem', [
-            new PP($this)
-        ]);
+		$this->saveResource("groups.yml");
+		$this->saveResource("chat.yml");
+		$this->saveResource("config.yml");
+		$this->saveResource("data.yml");
+		$this->group = new Config($this->getDataFolder() . "groups.yml", Config::YAML);
+		$this->chat = new Config($this->getDataFolder() . "chat.yml", Config::YAML);
+		$this->conf = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+		$this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
+	}
 
-        $this->getLogger()->notice("---------- PocketPerms ---------");
-        $this->getLogger()->notice("    Loaded, & ready to use     ");
-        $this->getLogger()->notice("-------------------------------");
+	/*
+	 *  Gets a player group
+	 */
+	public function getPlayerGroup($player){
 
-    }
+		if($this->data instanceof Config && $player instanceof Player){
+			$group = $this->data->get($player->getName());
 
-    public function onDisable()
-    {
-        $this->main->save();
-        $this->chatFormat->save();
-        $this->groups->save();
-        $this->data->save();
-    }
+			if($group == null){
+				return null;
+			}else{
+				return $group;
+			}
+		}
+	}
 
+	/*
+	 * Sets a player group
+	 */
+	public function setGroup($player, $group){
 
-    /*
-     *  Gets a player group
-     */
-    public function getPlayerGroup($player)
-    {
+		if($this->data instanceof Config && $player instanceof Player){
+			$this->data->set($player->getName(), $group);
+			$this->data->save();
+		}else{
+			return false;
+		}
+	}
 
-        if ($this->data instanceof Config && $player instanceof Player) {
-            $group = $this->data->get($player->getName());
+	/*
+	 * Get a group chat format
+	 */
+	public function getChatFormat($player, $message){
 
-            if ($group == null) {
-                return null;
-            } else {
-                return $group;
-            }
-        }
-    }
+		if($this->chat instanceof Config && $player instanceof Player){
 
-    /*
-     * Sets a player group
-     */
-    public function setGroup($player, $group)
-    {
+			$group = $this->getPlayerGroup($player);
+			$format = $this->chat->get($group);
+			$format = $format['Chat'];
+			$format = str_replace("{player_nametag}", $player->getNameTag(), $format);
+			$format = str_replace("{player_name}", $player->getName(), $format);
+			$format = str_replace("{color}", "§", $format);
+			$format = str_replace("{message}", $message, $format);
 
-        if ($this->data instanceof Config && $player instanceof Player) {
-            $this->data->set($player->getName(), $group);
-            $this->data->save();
-        } else {
-            return false;
-        }
-    }
+			if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+				$format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
+			}
+			if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+				$format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+			}
+			if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+				$format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+			}
 
-    /*
-     * Get a group chat format
-     */
-    public function getChatFormat($player, $message)
-    {
+			$format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
+			$format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
+			$format = str_replace("{Level}", $player->getLevel()->getName(), $format);
+			$format = str_replace("{Health}", $player->getHealth(), $format);
+			return $format;
+		}else{
+			return false;
+		}
+	}
 
-        if ($this->chatFormat instanceof Config && $player instanceof Player) {
+	/*
+	 * Get a group name tag format
+	 */
+	public function getNameTagFormat($player){
 
-            $group = $this->getPlayerGroup($player);
-            $format = $this->chatFormat->get($group);
-            $format = $format['Chat'];
-            $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
-            $format = str_replace("{player_name}", $player->getName(), $format);
-            $format = str_replace("{color}", "§", $format);
-            $format = str_replace("{message}", $message, $format);
+		if($this->chat instanceof Config){
+			if($player instanceof Player){
+				$group = $this->getPlayerGroup($player);
+				$format = $this->chat->get($group);
+				$format = str_replace("{player_nametag}", $player->getNameTag(), $format);
+				$format = str_replace("{player_name}", $player->getName(), $format);
+				$format = str_replace("{color}", "§", $format);
 
-            if ($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null) {
-                $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
-            }
-            if ($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null) {
-                $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
-            }
-            if ($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null) {
-                $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
-            }
+				if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+					$format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
+				}
+				if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+					$format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+				}
+				if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+					$format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+				}
 
-            $format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
-            $format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
-            $format = str_replace("{Level}", $player->getLevel()->getName(), $format);
-            $format = str_replace("{Health}", $player->getHealth(), $format);
-            return $format;
-        } else {
-            return false;
-        }
-    }
+				$format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
+				$format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
+				$format = str_replace("{Level}", $player->getLevel()->getName(), $format);
+				$format = str_replace("{Health}", $player->getHealth(), $format);
+				return $format;
 
-    /*
-     * Get a group name tag format
-     */
-    public function getNameTagFormat($player)
-    {
+			}else{
 
-        if ($this->chatFormat instanceof Config) {
-            if ($player instanceof Player) {
-                $group = $this->getPlayerGroup($player);
-                $format = $this->chatFormat->get($group);
-                $format = str_replace("{player_nametag}", $player->getNameTag(), $format);
-                $format = str_replace("{player_name}", $player->getName(), $format);
-                $format = str_replace("{color}", "§", $format);
+				return false;
+			}
+		}
+	}
 
-                if ($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null) {
-                    $format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
-                }
-                if ($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null) {
-                    $format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
-                }
-                if ($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null) {
-                    $format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
-                }
+	/*
+	 * Checks if a group  exist
+	 */
+	public function getGroup($group){
 
-                $format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
-                $format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
-                $format = str_replace("{Level}", $player->getLevel()->getName(), $format);
-                $format = str_replace("{Health}", $player->getHealth(), $format);
-                return $format;
+		$gr = $this->group;
 
-            } else {
+		if($gr->get($group) != null){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-                return false;
-            }
-        }
-    }
+	/*
+	 * Add a permission to a group
+	 */
+	public function addGroupPermission($group, $pp){
 
-    /*
-     * Checks if a group  exist
-     */
-    public function getGroup($group)
-    {
+		if($this->group instanceof Config){
 
-        $g = $this->groups->get("Groups");
+			$gr = $this->group;
+			$pp = $gr->get($group)['Permissions'];
+			$pp[] = $pp;
 
-        if ($g[$group] != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+			$gr->set($group['Permissions'], $pp);
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-    /*
-     *  Register permission to player ($permissions must
-     *  be instance of a list of permissions to add)
-     */
-    public function addPermission($player, $pp, $permissions = null)
-    {
+	/*
+    * Remove a permission from a group
+    */
+	public function deleteGroupPermission($group, $pp){
 
-        if ($player instanceof Player) {
-            $player->addAttachment($this, $pp, true);
-        } else {
-            return false;
-        }
-    }
+		if($this->group instanceof Config){
+			$permission = $this->group->get("Groups");
+			$permissions = $permission[$group]['Permissions'];
 
-    /*
-     * Add a permission to a group
-     */
-    public function addGroupPermission($group, $pp)
-    {
+			$result = array_diff($permission, $pp);
+			$pp = $this->group->get("Groups");
+			$ppp = $pp[$group]['Permissions'];
+			$this->group->set($ppp, $result);
 
-        if ($this->groups instanceof Config) {
-            $permission = $this->groups->get("Groups");
-            $permissions = $permission[$group]['Permissions'];
-            $updated = $permissions;
-            $updated[] = "$pp";
-            $da = $this->groups->get("Groups");
-            $da = $da[$group];
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-            $v = $this->groups->get("Groups");
+	/*
+	 * Delete a group from the list of groups
+	 */
+	public function deleteGroup($group){
 
-        } else {
-            return false;
-        }
-    }
+		if($this->group instanceof Config){
+			$group = $this->group->get("Groups");
 
-    /*
-   * Remove a permission from a group
-   */
-    public function deleteGroupPermission($group, $pp)
-    {
+			$remove = array($group);
+			$result = array_diff($group, $remove);
+			$this->group->set("Groups", $result);
 
-        if ($this->groups instanceof Config) {
-            $permission = $this->groups->get("Groups");
-            $permissions = $permission[$group]['Permissions'];
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-            $result = array_diff($permission, $pp);
-            $pp = $this->groups->get("Groups");
-            $ppp = $pp[$group]['Permissions'];
-            $this->groups->set($ppp ,$result);
+	/*
+	 *  Returns the list of groups in array
+	 */
+	public function getGroups(){
+		$pie = $this->group->getAll();
+		$cupcake = $pie['Groups'];
 
-        } else {
-            return false;
-        }
-    }
+		var_dump($cupcake);
+	}
 
-    /*
-     * Delete a group from the list of groups
-     */
-    public function deleteGroup($group)
-    {
+	/*
+	 *  Sets a group chat format
+	 */
+	public function setGroupFormat($group, $format){
 
-        if ($this->groups instanceof Config) {
-            $group = $this->groups->get("Groups");
-
-            $remove = array($group);
-            $result = array_diff($group, $remove);
-            $this->groups->set("Groups", $result);
-
-        } else {
-            return false;
-        }
-    }
-
-    /*
-     *  Returns the list of groups in array
-     */
-    public function getGroups()
-    {
-        $pie = $this->groups->getAll();
-        $cupcake = $pie['Groups'];
-
-        var_dump($cupcake);
-    }
-
-    /*
-     *  Sets a group chat format
-     */
-    public function setGroupFormat($group, $format){
-
-        if($this->chatFormat instanceof Config){
-            $this->chatFormat->set($group, $format);
-        } else {
-            return false;
-        }
-    }
+		if($this->chat instanceof Config){
+			$this->chat->set($group, $format);
+		}else{
+			return false;
+		}
+	}
 }
 

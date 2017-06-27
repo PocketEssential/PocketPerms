@@ -31,7 +31,15 @@ class PP extends Base
         if ($sender instanceof Player) {
 
             if($args[0] == null){
-                $sender->sendMessage("");
+                $help = [
+                '-- PocketPerms --',
+	                '',
+	                'For a list of commands',
+	                'Please execute /pp help',
+                ];
+                foreach($help as $l){
+                	$sender->sendMessage($l);
+                }
             }
             switch ($args[0]){
 
@@ -40,10 +48,10 @@ class PP extends Base
                  */
                 case "setgroup":
                 case "setgrp":
-                    if($args[1] == null){
+                    if(!isset($args[1])){
                         $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Player name> <Group name>");
                     } else {
-                        if ($args[2] == null) {
+	                    if(!isset($args[2])){
                             $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setgroup <Player name> <Group name>");
                         } else {
                             if ($this->getPlugin()->getServer()->getPlayer($args[1]) == null) {
@@ -66,10 +74,10 @@ class PP extends Base
                 case "addperm":
                 case "addp":
                 case "addpermission":
-                    if($args[1] == null){
+	            if(!isset($args[1])){
                         $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp addperm <Group name> <Permission>");
                     } else {
-                        if ($args[2] == null) {
+		            if(!isset($args[2])){
                             $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp addperm <Group name> <Permission>");
                         } else {
                             if ($this->getPlugin()->getGroup($args[1]) == false) {
@@ -89,7 +97,7 @@ class PP extends Base
                 case "rmgroup":
                 case "delgroup":
                 case "delgrp":
-                    if($args[1] == null){
+	            if(!isset($args[1])){
                         $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delgroup <Group name>");
                     } else {
                         if ($this->getPlugin()->getGroup($args[1]) == false) {
@@ -121,10 +129,10 @@ class PP extends Base
                  */
                  case "setformat":
                  case "setfmt":
-                if($args[1] == null){
+	            if(!isset($args[1])){
                     $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setformat <Group name> <Format>");
                 } else {
-                    if ($args[2] == null) {
+		            if(!isset($args[2])){
                         $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp setformat <Group name> <Format>");
                     } else {
                         if ($this->getPlugin()->getGroup($args[1]) == false) {
@@ -143,10 +151,10 @@ class PP extends Base
                 case "delperm":
                 case "delp":
                 case "delpermission":
-                    if($args[1] == null){
+	            if(!isset($args[1])){
                         $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delperm <Group name> <Permission>");
                     } else {
-                        if ($args[2] == null) {
+		            if(!isset($args[2])){
                             $sender->sendMessage(TextFormat::YELLOW . "Usage: /pp delperm <Group name> <Permission>");
                         } else {
                             if ($this->getPlugin()->getGroup($args[1]) == false) {
