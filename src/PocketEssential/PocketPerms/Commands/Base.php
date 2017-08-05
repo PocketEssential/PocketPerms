@@ -12,35 +12,36 @@ use PocketEssential\PocketPerms\PocketPerms;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
+use pocketmine\plugin\Plugin;
 
 class Base extends Command implements PluginIdentifiableCommand {
 
-    private $plugin;
+	private $plugin;
 
-    public function __construct(PocketPerms $plugin, $name, $description, $usageMessage, $aliases) {
-        parent::__construct($name, $description, $usageMessage, $aliases);
-        $this->plugin = $plugin;
-    }
+	public function __construct(PocketPerms $plugin, $name, $description, $usageMessage, $aliases){
+		parent::__construct($name, $description, $usageMessage, $aliases);
+		$this->plugin = $plugin;
+	}
 
-    public function execute(CommandSender $sender, $commandLabel, array $args) {
-        if($sender->hasPermission($this->getPermission())){
-            $result = $this->onExecute($sender, $args);
-            if (is_string($result)) {
-                $sender->sendMessage($result);
-            }
-            return true;
-        } else {
-            $sender->sendMessage(PocketPerms::PERMISSION);
-        }
-        return false;
-    }
+	public function execute(CommandSender $sender, string $commandLabel, array $args){
+		if($sender->hasPermission($this->getPermission())){
+			$result = $this->onExecute($sender, $args);
+			if(is_string($result)){
+				$sender->sendMessage($result);
+			}
+			return true;
+		}else{
+			$sender->sendMessage(PocketPerms::PERMISSION);
+		}
+		return false;
+	}
 
-    public function onExecute(CommandSender $sender, array $args) {
+	public function onExecute(CommandSender $sender, array $args){
 
-    }
+	}
 
-    public function getPlugin(){
+	public function getPlugin() : Plugin{
 
-        return $this->plugin;
-    }
+		return $this->plugin;
+	}
 }

@@ -12,25 +12,23 @@ use PocketEssential\PocketPerms\PocketPerms;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 
-class ChatListener implements Listener
-{
+class ChatListener implements Listener {
 
-    public $plugin;
+	public $plugin;
 
-    public function __construct(PocketPerms $plugin)
-    {
+	public function __construct(PocketPerms $plugin){
 
-        $this->plugin = $plugin;
-    }
+		$this->plugin = $plugin;
+	}
 
-    /*
-     *  Listens on Chat
-     */
+	/*
+	 *  Listens on Chat
+	 */
 
-    public function onChat(PlayerChatEvent $event){
+	public function onChat(PlayerChatEvent $event){
 
-        $player = $event->getPlayer();
+		$player = $event->getPlayer();
 
-        $event->setFormat($this->plugin->getChatFormat($player, $event->getMessage()));
-    }
+		$event->setFormat($this->plugin->getChatFormat($player, $event->getMessage()));
+	}
 }

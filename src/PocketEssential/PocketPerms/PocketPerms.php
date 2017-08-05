@@ -23,23 +23,22 @@
 namespace PocketEssential\PocketPerms;
 
 
-use onebone\economyapi\EconomyAPI;
 use EconomyPlus\EconomyPlus;
+use onebone\economyapi\EconomyAPI;
 use PocketEssential\PocketPerms\Commands\PP;
 use pocketmine\event\Listener;
-use pocketmine\Server;
-use pocketmine\utils\Config;
-use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
+use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 
 class PocketPerms extends PluginBase implements Listener {
 
+	const PERMISSION = ".";
+	const RUN_FROM_CONSOLE = "Please run this command from console";
 	public $group;
 	public $conf;
 	public $chat;
 	public $data;
-	const PERMISSION = ".";
-	const RUN_FROM_CONSOLE = "Please run this command from console";
 
 	public function onEnable(){
 		$this->getServer()->getPluginManager()->registerEvents(new PPListener\ChatListener($this), $this);
@@ -47,7 +46,7 @@ class PocketPerms extends PluginBase implements Listener {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getReady();
 
-		$this->getServer()->getCommandMap()->registerAll('NetworkSystem', [
+		$this->getServer()->getCommandMap()->registerAll('PocketPerms', [
 			new PP($this)
 		]);
 
@@ -55,13 +54,6 @@ class PocketPerms extends PluginBase implements Listener {
 		$this->getLogger()->notice("    Loaded, & ready to use     ");
 		$this->getLogger()->notice("-------------------------------");
 
-	}
-
-	public function onDisable(){
-		$this->group->save();
-		$this->conf->save();
-		$this->chat->save();
-		$this->data->save();
 	}
 
 	public function getReady(){
@@ -80,38 +72,17 @@ class PocketPerms extends PluginBase implements Listener {
 		$this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
 	}
 
+	public function onDisable(){
+		$this->group->save();
+		$this->conf->save();
+		$this->chat->save();
+		$this->data->save();
+	}
+
 	/*
 	 *  Gets a player group
 	 */
-	public function getPlayerGroup($player){
 
-		if($this->data instanceof Config && $player instanceof Player){
-			$group = $this->data->get($player->getName());
-
-			if($group == null){
-				return null;
-			}else{
-				return $group;
-			}
-		}
-	}
-
-	/*
-	 * Sets a player group
-	 */
-	public function setGroup($player, $group){
-
-		if($this->data instanceof Config && $player instanceof Player){
-			$this->data->set($player->getName(), $group);
-			$this->data->save();
-		}else{
-			return false;
-		}
-	}
-
-	/*
-	 * Get a group chat format
-	 */
 	public function getChatFormat($player, $message){
 
 		if($this->chat instanceof Config && $player instanceof Player){
@@ -145,8 +116,26 @@ class PocketPerms extends PluginBase implements Listener {
 	}
 
 	/*
-	 * Get a group name tag format
+	 * Sets a player group
 	 */
+
+	public function getPlayerGroup($player){
+
+		if($this->data instanceof Config && $player instanceof Player){
+			$group = $this->data->get($player->getName());
+
+			if($group == null){
+				return null;
+			}else{
+				return $group;
+			}
+		}
+	}
+
+	/*
+	 * Get a group chat format
+	 */
+
 	public function getNameTagFormat($player){
 
 		if($this->chat instanceof Config){
@@ -181,8 +170,9 @@ class PocketPerms extends PluginBase implements Listener {
 	}
 
 	/*
-	 * Checks if a group  exist
+	 * Get a group name tag format
 	 */
+
 	public function getGroup($group){
 
 		$gr = $this->group;
@@ -195,8 +185,23 @@ class PocketPerms extends PluginBase implements Listener {
 	}
 
 	/*
+	 * Checks if a group  exist
+	 */
+
+	public function setGroup($player, $group){
+
+		if($this->data instanceof Config && $player instanceof Player){
+			$this->data->set($player->getName(), $group);
+			$this->data->save();
+		}else{
+			return false;
+		}
+	}
+
+	/*
 	 * Add a permission to a group
 	 */
+
 	public function addGroupPermission($group, $pp){
 
 		if($this->group instanceof Config){

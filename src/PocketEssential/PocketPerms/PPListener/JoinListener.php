@@ -9,24 +9,20 @@
 namespace PocketEssential\PocketPerms\PPListener;
 
 
+use PocketEssential\PocketPerms\Permission\AddPermission;
 use PocketEssential\PocketPerms\PocketPerms;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 
 class JoinListener implements Listener {
 
 	public $plugin;
-	public $cache;
 
 	public function __construct(PocketPerms $plugin){
 
 		$this->plugin = $plugin;
 	}
 
-	/*
- * Listens on Join
- */
 
 	public function onJoin(PlayerPreLoginEvent $event){
 
@@ -39,20 +35,9 @@ class JoinListener implements Listener {
 			$player->setNameTag($this->plugin->getNameTagFormat($player));
 		}
 
-		if($this->plugin->conf->get("cache") == "true"){
-			$this->cache[$player->getName()] = array(
-				"Group" => $this->plugin->getPlayerGroup($player),
-			);
-			$this->plugin->getLogger()->info($player->getName() . " cache data has been saved. Next time he/she logs in it will be used.");
-		}
-
 		if($this->plugin->getPlayerGroup($player) != null){
-			$permissions = $this->plugin->group->get($this->plugin->getPlayerGroup($player))['Permissions'];
-
-			$d = 0;
-			foreach($permissions as $pp){
-				
-			}
+			$aP = new AddPermission($this->plugin, $player);
+			$aP->add();
 		}
 	}
 }
