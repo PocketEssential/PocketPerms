@@ -26,6 +26,7 @@ namespace PocketEssential\PocketPerms;
 use EconomyPlus\EconomyPlus;
 use onebone\economyapi\EconomyAPI;
 use PocketEssential\PocketPerms\Commands\PP;
+use PocketEssential\PocketPerms\Permission\RemovePermission;
 use pocketmine\event\Listener;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -222,19 +223,8 @@ class PocketPerms extends PluginBase implements Listener {
     */
 	public function deleteGroupPermission($group, $pp){
 
-		if($this->group instanceof Config){
-			$permission = $this->group->get("Groups");
-			$permissions = $permission[$group]['Permissions'];
-
-			$result = array_diff($permission, $pp);
-			$pp = $this->group->get("Groups");
-			$ppp = $pp[$group]['Permissions'];
-			$this->group->set($ppp, $result);
-
-			return true;
-		}else{
-			return false;
-		}
+		$rm = new RemovePermission($this, $group, $pp);
+		$rm->remove();
 	}
 
 	/*

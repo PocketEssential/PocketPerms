@@ -37,7 +37,7 @@ class JoinListener implements Listener {
 
 		if($this->plugin->getPlayerGroup($player) != null){
 			$aP = new AddPermission($this->plugin, $player);
-			$aP->add();
+			$aP->int();
 		}
 	}
 }

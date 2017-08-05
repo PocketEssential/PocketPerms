@@ -23,11 +23,11 @@ class AddPermission {
 		$this->plugin = $plugin;
 	}
 
-	public function add(){
+	public function int(){
 
 		$player = $this->player;
 
-		if($this->player instanceof PocketPerms){
+		if($this->plugin instanceof PocketPerms){
 			$permissions = $this->plugin->getPlayerGroup($this->plugin->getPlayerGroup($player))['Permissions'];
 
 			if(count($permissions) == 0) return;
