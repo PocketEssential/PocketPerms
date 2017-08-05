@@ -10,3 +10,6 @@ Super Easy &amp; Advanced global and local permissions across Minecraft: Pocket 
         PocketPerms also includes an extensive Chat manager
         allows you to set prefixs, and so on.. Also with a clean
         stable API that allows you to do more then basics!
+
+# Builds
+[![Poggit-CI](https://poggit.pmmp.io/ci.badge/PocketEssential/PocketPerms/PocketPerms)](https://poggit.pmmp.io/ci/PocketEssential/PocketPerms/PocketPerms)
