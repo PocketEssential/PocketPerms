@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Andre
@@ -14,21 +15,22 @@ use pocketmine\event\player\PlayerChatEvent;
 
 class ChatListener implements Listener {
 
-	public $plugin;
+	/** @var PocketPerms */
+	private $plugin;
 
+	/**
+	 * @param PocketPerms $plugin
+	 */
 	public function __construct(PocketPerms $plugin){
-
 		$this->plugin = $plugin;
 	}
 
-	/*
-	 *  Listens on Chat
+	/**
+	 * @param PlayerChatEvent $event
 	 */
-
 	public function onChat(PlayerChatEvent $event){
-
 		$player = $event->getPlayer();
 
-		$event->setFormat($this->plugin->getChatFormat($player, $event->getMessage()));
+		$event->setFormat((string) $this->plugin->getChatFormat($player, $event->getMessage()));
 	}
 }

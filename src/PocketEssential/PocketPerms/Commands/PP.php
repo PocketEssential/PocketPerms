@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Andre
@@ -11,20 +12,30 @@ namespace PocketEssential\PocketPerms\Commands;
 use PocketEssential\PocketPerms\PocketPerms;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
-use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 
 
 class PP extends Base {
 
+	/** @var PocketPerms */
 	private $plugin;
 
+	/**
+	 * @param PocketPerms $plugin
+	 */
 	public function __construct(PocketPerms $plugin){
 		$this->plugin = $plugin;
 		parent::__construct($plugin, "pp", "PocketPerm", "/pp", ["p", "pocketperm"]);
 	}
 
 
+	/**
+	 * @param CommandSender $sender
+	 * @param string        $commandLabel
+	 * @param array         $args
+	 *
+	 * @return bool
+	 */
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
 
 		if($sender instanceof Player){
@@ -117,7 +128,7 @@ class PP extends Base {
 				case "listgrp":
 					$sender->sendMessage(TextFormat::BLUE . "[PP]" . TextFormat::GREEN . "List of groups:");
 
-					$groups = $this->getPlugin()->groups->get("Groups");
+					$groups = $this->getPlugin()->group->get("Groups");
 					foreach($groups as $g){
 						$sender->sendMessage("- " . $g);
 					}
@@ -169,16 +180,7 @@ class PP extends Base {
 		}else{
 			$sender->sendMessage(PocketPerms::RUN_FROM_CONSOLE);
 		}
+
 		return true;
-	}
-
-	public function getPlugin() : Plugin{
-
-		return $this->plugin;
-	}
-
-	public function getServer(){
-
-		return $this->getPlugin()->getServer();
 	}
 }

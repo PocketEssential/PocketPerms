@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Andre
@@ -16,16 +17,21 @@ use pocketmine\event\player\PlayerPreLoginEvent;
 
 class JoinListener implements Listener {
 
-	public $plugin;
+	/** @var PocketPerms */
+	private $plugin;
 
+	/**
+	 * @param PocketPerms $plugin
+	 */
 	public function __construct(PocketPerms $plugin){
-
 		$this->plugin = $plugin;
 	}
 
 
+	/**
+	 * @param PlayerPreLoginEvent $event
+	 */
 	public function onJoin(PlayerPreLoginEvent $event){
-
 		$player = $event->getPlayer();
 
 		if($this->plugin->getPlayerGroup($player) == null){

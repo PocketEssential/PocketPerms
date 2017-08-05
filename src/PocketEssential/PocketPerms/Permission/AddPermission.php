@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: Andre
@@ -15,9 +16,15 @@ use pocketmine\Server;
 
 class AddPermission {
 
+	/** @var PocketPerms */
 	public $plugin;
+	/** @var Player */
 	public $player;
 
+	/**
+	 * @param PocketPerms $plugin
+	 * @param Player      $player
+	 */
 	public function __construct(PocketPerms $plugin, Player $player){
 		$this->player = $player;
 		$this->plugin = $plugin;
@@ -27,20 +34,20 @@ class AddPermission {
 
 		$player = $this->player;
 
-		if($this->plugin instanceof PocketPerms){
-			$permissions = $this->plugin->getPlayerGroup($this->plugin->getPlayerGroup($player))['Permissions'];
+		$permissions = $this->plugin->getPlayerGroup($this->plugin->getPlayerGroup($player))['Permissions'];
 
-			if(count($permissions) == 0) return;
+		if(count($permissions) == 0) return;
 
-			foreach($permissions as $p){
-				$player->addAttachment($this->plugin, $p, true);
-			}
-
+		foreach($permissions as $p){
+			$player->addAttachment($this->plugin, $p, true);
 		}
+
 	}
 
+	/**
+	 * @return Server
+	 */
 	public function getServer() : Server{
-
 		return $this->plugin->getServer();
 	}
 }

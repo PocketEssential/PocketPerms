@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 #
 #  _____           _        _   _____
 # |  __ \         | |      | | |  __ \
@@ -36,9 +37,13 @@ class PocketPerms extends PluginBase implements Listener {
 
 	const PERMISSION = ".";
 	const RUN_FROM_CONSOLE = "Please run this command from console";
+	/** @var Config */
 	public $group;
+	/** @var Config */
 	public $conf;
+	/** @var Config */
 	public $chat;
+	/** @var Config */
 	public $data;
 
 	public function onEnable(){
@@ -80,10 +85,14 @@ class PocketPerms extends PluginBase implements Listener {
 		$this->data->save();
 	}
 
-	/*
-	 *  Gets a player group
+	/**
+	 * Gets the chat format
+	 *
+	 * @param $player
+	 * @param $message
+	 *
+	 * @return bool|mixed
 	 */
-
 	public function getChatFormat($player, $message){
 
 		if($this->chat instanceof Config && $player instanceof Player){
@@ -110,70 +119,69 @@ class PocketPerms extends PluginBase implements Listener {
 			$format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
 			$format = str_replace("{Level}", $player->getLevel()->getName(), $format);
 			$format = str_replace("{Health}", $player->getHealth(), $format);
+
 			return $format;
 		}else{
 			return false;
 		}
 	}
 
-	/*
-	 * Sets a player group
+	/**
+	 * Gets a player's group
+	 *
+	 * @param Player $player
+	 *
+	 * @return bool|mixed|null
 	 */
+	public function getPlayerGroup(Player $player){
+		$group = $this->data->get($player->getName());
 
-	public function getPlayerGroup($player){
-
-		if($this->data instanceof Config && $player instanceof Player){
-			$group = $this->data->get($player->getName());
-
-			if($group == null){
-				return null;
-			}else{
-				return $group;
-			}
+		if($group == null){
+			return null;
+		}else{
+			return $group;
 		}
 	}
 
-	/*
-	 * Get a group chat format
+	/**
+	 * Gets the nametag format
+	 *
+	 * @param Player $player
+	 *
+	 * @return bool|mixed
 	 */
+	public function getNameTagFormat(Player $player){
+		$group = $this->getPlayerGroup($player);
+		$format = $this->chat->get($group);
+		$format = str_replace("{player_nametag}", $player->getNameTag(), $format);
+		$format = str_replace("{player_name}", $player->getName(), $format);
+		$format = str_replace("{color}", "§", $format);
 
-	public function getNameTagFormat($player){
-
-		if($this->chat instanceof Config){
-			if($player instanceof Player){
-				$group = $this->getPlayerGroup($player);
-				$format = $this->chat->get($group);
-				$format = str_replace("{player_nametag}", $player->getNameTag(), $format);
-				$format = str_replace("{player_name}", $player->getName(), $format);
-				$format = str_replace("{color}", "§", $format);
-
-				if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
-					$format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
-				}
-				if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
-					$format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
-				}
-				if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
-					$format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
-				}
-
-				$format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
-				$format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
-				$format = str_replace("{Level}", $player->getLevel()->getName(), $format);
-				$format = str_replace("{Health}", $player->getHealth(), $format);
-				return $format;
-
-			}else{
-
-				return false;
-			}
+		if($this->getServer()->getPluginManager()->getPlugin("FactionsPro") != null){
+			$format = str_replace("{Factions_Pro}", $this->getServer()->getPluginManager()->getPlugin("FactionsPro")->getPlayerFaction($player), $format);
 		}
+		if($this->getServer()->getPluginManager()->getPlugin("EconomyPlus") != null){
+			$format = str_replace("{EconomyPlus_Money}", EconomyPlus::getInstance()->getMoney($player), $format);
+		}
+		if($this->getServer()->getPluginManager()->getPlugin("EconomyAPI") != null){
+			$format = str_replace("{EconomyAPI_Money}", EconomyAPI::getInstance()->myMoney($player), $format);
+		}
+
+		$format = str_replace("{Online}", count($this->getServer()->getOnlinePlayers()), $format);
+		$format = str_replace("{Max}", $this->getServer()->getMaxPlayers(), $format);
+		$format = str_replace("{Level}", $player->getLevel()->getName(), $format);
+		$format = str_replace("{Health}", $player->getHealth(), $format);
+
+		return $format;
 	}
 
-	/*
-	 * Get a group name tag format
+	/**
+	 * Checks if a group exists
+	 *
+	 * @param $group
+	 *
+	 * @return bool
 	 */
-
 	public function getGroup($group){
 
 		$gr = $this->group;
@@ -185,25 +193,31 @@ class PocketPerms extends PluginBase implements Listener {
 		}
 	}
 
-	/*
-	 * Checks if a group  exist
+	/**
+	 * Sets a player's group
+	 *
+	 * @param Player $player
+	 * @param        $group
+	 *
+	 * @return bool
 	 */
+	public function setGroup(Player $player, $group){
+		$this->data->set($player->getName(), $group);
+		$this->data->save();
 
-	public function setGroup($player, $group){
-
-		if($this->data instanceof Config && $player instanceof Player){
-			$this->data->set($player->getName(), $group);
-			$this->data->save();
-		}else{
-			return false;
-		}
+		return true;
 	}
 
-	/*
-	 * Add a permission to a group
+	/**
+	 * Adds a permission to a group
+	 *
+	 * @param $group
+	 *
+	 * @return bool
+	 * @internal param $pp
+	 *
 	 */
-
-	public function addGroupPermission($group, $pp){
+	public function addGroupPermission($group){
 
 		if($this->group instanceof Config){
 
@@ -212,59 +226,54 @@ class PocketPerms extends PluginBase implements Listener {
 			$pp[] = $pp;
 
 			$gr->set($group['Permissions'], $pp);
+
 			return true;
 		}else{
 			return false;
 		}
 	}
 
-	/*
-    * Remove a permission from a group
-    */
-	public function deleteGroupPermission($group, $pp){
-
-		$rm = new RemovePermission($this, $group, $pp);
-		$rm->remove();
-	}
-
-	/*
-	 * Delete a group from the list of groups
+	/**
+	 * Removes a permission from a group
+	 *
+	 * @param $group
+	 * @param $pp
 	 */
-	public function deleteGroup($group){
-
-		if($this->group instanceof Config){
-			$group = $this->group->get("Groups");
-
-			$remove = array($group);
-			$result = array_diff($group, $remove);
-			$this->group->set("Groups", $result);
-
-			return true;
-		}else{
-			return false;
-		}
+	public function deleteGroupPermission($group, $pp){
+		$rm = new RemovePermission($this, $group, $pp);
+		$rm->int();
 	}
 
-	/*
-	 *  Returns the list of groups in array
+	/**
+	 * Deletes a group from the config
+	 *
+	 * @return bool
+	 */
+	public function deleteGroup(){
+		$group = $this->group->get("Groups");
+
+		$remove = [$group];
+		$result = array_diff($group, $remove);
+		$this->group->set("Groups", $result);
+
+		return true;
+	}
+
+	/**
+	 * Returns the list of groups in array
 	 */
 	public function getGroups(){
-		$pie = $this->group->getAll();
-		$cupcake = $pie['Groups'];
-
-		var_dump($cupcake);
+		//TODO: Actually make this
 	}
 
-	/*
-	 *  Sets a group chat format
+	/**
+	 * Sets a group format
+	 *
+	 * @param $group
+	 * @param $format
 	 */
 	public function setGroupFormat($group, $format){
-
-		if($this->chat instanceof Config){
-			$this->chat->set($group, $format);
-		}else{
-			return false;
-		}
+		$this->chat->set($group, $format);
 	}
 }
 
